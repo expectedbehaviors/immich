@@ -1,0 +1,94 @@
+# Baseline Immich values. Override DB host, persistence, ingress, and External Secrets in your deployment values.
+
+immich:
+  controllers:
+    main:
+      containers:
+        main:
+          env:
+            DB_HOSTNAME: postgresql.example.svc.cluster.local
+            DB_PORT: "5432"
+            DB_DATABASE_NAME: immich
+            TZ: UTC
+          envFrom:
+            - secretRef:
+                name: immich-db-credentials
+  immich:
+    persistence:
+      library:
+        existingClaim: immich-library
+      configuration: {}
+      configurationKind: ConfigMap
+    metrics:
+      enabled: false
+  server:
+    enabled: true
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/immich-app/immich-server
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: immich-db-credentials
+        ingress:
+          main:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: "0"
+              external-dns.alpha.kubernetes.io/target: example.com
+            hosts:
+              - host: immich.example.com
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls: []
+    service:
+      main:
+        identifier: main
+  machine-learning:
+    enabled: true
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/immich-app/immich-machine-learning
+              pullPolicy: IfNotPresent
+            env:
+              TRANSFORMERS_CACHE: /cache
+              HF_XET_CACHE: /cache/huggingface-xet
+              MPLCONFIGDIR: /cache/matplotlib-config
+        persistence:
+          cache:
+            enabled: true
+            size: 10Gi
+            type: emptyDir
+            accessMode: ReadWriteMany
+  valkey:
+    enabled: true
+    persistence:
+      data:
+        enabled: true
+        size: 1Gi
+        type: emptyDir
+        accessMode: ReadWriteOnce
+
+externalSecrets:
+  dbCredentials:
+    enabled: true
+    secretName: immich-db-credentials
+    refreshInterval: 1h
+    secretStoreRef:
+      name: onepassword-connect
+      kind: ClusterSecretStore
+    itemTitle: postgresql
+    passwordProperty: password
+
+onepassworditem:
+  enabled: false
+  defaultVault: ""
+  items: []
