@@ -1,0 +1,32 @@
+apiVersion: v1
+entries:
+  immich:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-06-10T02:41:07.118024896Z"
+    dependencies:
+    - name: immich
+      repository: https://immich-app.github.io/immich-charts
+      version: 0.10.3
+    - name: onepassworditem
+      repository: https://expectedbehaviors.github.io/OnePasswordItem-helm
+      version: 1.1.1
+    description: Immich self-hosted photo and video backup. Official chart with optional
+      External Secrets for DB credentials.
+    digest: 18f93851215c94dfe38a82a2704caae8e7765fc32971cba0418a589474976e0e
+    home: https://immich.app
+    keywords:
+    - immich
+    - photos
+    - backup
+    - media
+    kubeVersion: '>=1.22.0-0'
+    name: immich
+    sources:
+    - https://github.com/immich-app/immich-charts
+    - https://github.com/immich-app/immich
+    type: application
+    urls:
+    - https://expectedbehaviors.github.io/immich/immich-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-06-10T02:41:07.11215072Z"
