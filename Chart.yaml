@@ -3,7 +3,7 @@ name: immich
 description: Immich self-hosted photo and video backup. Official chart with optional External Secrets for DB credentials.
 type: application
 version: 1.0.0
-appVersion: "v2.0.0"
+appVersion: "1.0.0"
 kubeVersion: ">=1.22.0-0"
 keywords:
   - immich
